@@ -1,0 +1,221 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+/* Required for correct iframe sizing — AEM section margins inflate shadow body */
+main > div,
+main > .section,
+main > .section:first-of-type {
+  margin: 0;
+}
+main > .section > div {
+  max-width: none;
+  padding: 0;
+}
+body {
+  overflow: auto;
+}
+
+main .list-models {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  padding: 8px;
+  max-width: 780px;
+  margin: 0 auto;
+}
+
+main .list-models .models-wrapper {
+  position: relative;
+}
+
+main .list-models .models-carousel {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding: 4px;
+}
+
+main .list-models .models-carousel::-webkit-scrollbar {
+  display: none;
+}
+
+main .list-models .model-card {
+  flex: 0 0 220px;
+  height: 300px;
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  scroll-snap-align: start;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+main .list-models .model-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+main .list-models .model-image {
+  position: relative;
+  flex: 6;
+  overflow: hidden;
+}
+
+main .list-models .cta-button {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #646b52;
+  color: white;
+  border: none;
+  border-radius: 13px;
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  z-index: 10;
+}
+
+main .list-models .cta-button:hover {
+  opacity: 0.9;
+}
+
+main .list-models .cta-button:focus-visible {
+  outline: 2px solid white;
+  outline-offset: 2px;
+}
+
+main .list-models .model-info {
+  flex: 4;
+  padding: 8px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+main .list-models .model-name {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+main .list-models .model-description {
+  margin: 0;
+  font-size: 11px;
+  line-height: 1.3;
+  opacity: 0.78;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+main .list-models .model-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: auto;
+  min-height: 20px;
+}
+
+main .list-models .model-price {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+main .list-models .model-badge {
+  font-size: 11px;
+  padding: 4px 8px;
+  border-radius: 10px;
+  background: #646b52;
+  color: white;
+  white-space: nowrap;
+}
+
+main .list-models .nav-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.95);
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 16px;
+  color: #333;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transition: background 0.15s, transform 0.15s;
+  z-index: 20;
+}
+
+main .list-models .nav-arrow:hover {
+  background: white;
+  transform: translateY(-50%) scale(1.05);
+}
+
+main .list-models .nav-arrow:focus-visible {
+  outline: 2px solid #646b52;
+  outline-offset: 2px;
+}
+
+main .list-models .nav-arrow-left {
+  left: 8px;
+}
+
+main .list-models .nav-arrow-right {
+  right: 8px;
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+  main .list-models {
+    background: #111;
+  }
+  main .list-models .model-card {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  }
+  main .list-models .model-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  }
+  main .list-models .nav-arrow {
+    background: rgba(42, 42, 42, 0.95);
+    color: #fff;
+  }
+  main .list-models .nav-arrow:hover {
+    background: #2a2a2a;
+  }
+}
+
+body.dark main .list-models {
+  background: #111;
+}
+
+body.dark main .list-models .model-card {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+body.dark main .list-models .model-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+body.dark main .list-models .nav-arrow {
+  background: rgba(42, 42, 42, 0.95);
+  color: #fff;
+}
+
+body.dark main .list-models .nav-arrow:hover {
+  background: #2a2a2a;
+}
