@@ -15,7 +15,8 @@
  * @version 1.0.0
  * @since 2026-05-19
  */
-/* eslint-disable no-underscore-dangle, max-classes-per-file, class-methods-use-this, object-curly-newline */
+/* eslint-disable no-underscore-dangle, max-classes-per-file */
+/* eslint-disable class-methods-use-this, object-curly-newline */
 
 /**
  * LLMApps SDK — Lightweight connector for the LLM Apps protocol.

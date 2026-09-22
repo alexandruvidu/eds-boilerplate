@@ -6,16 +6,18 @@ main > .section,
 main > .section:first-of-type {
   margin: 0;
 }
+
 main > .section > div {
   max-width: none;
   padding: 0;
 }
+
 body {
   overflow: auto;
 }
 
 main .find-dealer {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   padding: 16px;
   background: transparent;
   box-sizing: border-box;
@@ -23,10 +25,9 @@ main .find-dealer {
 
 main .find-dealer .dealers-container {
   display: flex;
-  flex-direction: row;
+  flex-flow: row wrap;
   gap: 16px;
   justify-content: center;
-  flex-wrap: wrap;
   max-width: 560px;
   margin: 0 auto;
 }
@@ -46,7 +47,7 @@ main .find-dealer .pin-icon {
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.2);
+  background: rgb(255 255 255 / 20%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -103,6 +104,7 @@ main .find-dealer .dealer-services {
   main .find-dealer {
     background: transparent;
   }
+
   main .find-dealer .dealer-phone {
     color: #8fa876;
   }
@@ -117,11 +119,12 @@ body.dark main .find-dealer .dealer-phone {
 }
 
 /* Mobile adjustments */
-@media (max-width: 575px) {
+@media (width <= 575px) {
   main .find-dealer .dealers-container {
     flex-direction: column;
     align-items: center;
   }
+
   main .find-dealer .dealer-card {
     max-width: 100%;
   }
