@@ -7,7 +7,7 @@ const SAMPLE_DATA = {
   price: 'de la €20,490',
   category: 'SUV',
   engine_options: ['Hybrid', 'Petrol'],
-  key_features: ['7 seats', 'All-wheel drive', 'Advanced safety systems']
+  key_features: ['7 seats', 'All-wheel drive', 'Advanced safety systems'],
 };
 
 // Brand palette from BuildWidgetRequest - used to derive card background.
@@ -15,55 +15,48 @@ const PALETTE = ['#646b52', '#555555', '#6699cc'];
 
 function getThemedCardBg(palette) {
   if (!palette || !palette[0]) return null;
+
   let hex = palette[0].replace('#', '');
-  if (hex.length === 3) hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
-  if (hex.length !== 6) return null;
-  let [r, g, b] = [parseInt(hex.slice(0,2),16), parseInt(hex.slice(2,4),16), parseInt(hex.slice(4,6),16)];
-  if (isNaN(r) || isNaN(g) || isNaN(b)) return null;
-  const lum = (c) => { const s=c/255; return s<=0.03928?s/12.92:Math.pow((s+0.055)/1.055,2.4); };
-  const relLum = (r,g,b) => 0.2126*lum(r)+0.7152*lum(g)+0.0722*lum(b);
-  if (relLum(r,g,b) <= 0.12) return { bg: `#${hex}`, fg: '#ffffff' };
-  let lo=0, hi=1;
-  for (let i=0; i<20; i++) {
-    const m=(lo+hi)/2;
-    if (relLum(Math.round(r*m),Math.round(g*m),Math.round(b*m)) > 0.12) hi=m; else lo=m;
+  if (hex.length === 3) {
+    hex = `${hex[0]}${hex[0]}${hex[1]}${hex[1]}${hex[2]}${hex[2]}`;
   }
-  const dr=Math.round(r*lo), dg=Math.round(g*lo), db=Math.round(b*lo);
-  return { bg:`#${dr.toString(16).padStart(2,'0')}${dg.toString(16).padStart(2,'0')}${db.toString(16).padStart(2,'0')}`, fg:'#ffffff' };
+  if (hex.length !== 6) return null;
+
+  const red = Number.parseInt(hex.slice(0, 2), 16);
+  const green = Number.parseInt(hex.slice(2, 4), 16);
+  const blue = Number.parseInt(hex.slice(4, 6), 16);
+  if (Number.isNaN(red) || Number.isNaN(green) || Number.isNaN(blue)) return null;
+
+  const lum = (channel) => {
+    const s = channel / 255;
+    return s <= 0.03928 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4;
+  };
+  const relLum = (rChannel, gChannel, bChannel) => (
+    (0.2126 * lum(rChannel)) + (0.7152 * lum(gChannel)) + (0.0722 * lum(bChannel))
+  );
+  if (relLum(red, green, blue) <= 0.12) return { bg: `#${hex}`, fg: '#ffffff' };
+
+  let lo = 0;
+  let hi = 1;
+  for (let i = 0; i < 20; i += 1) {
+    const m = (lo + hi) / 2;
+    const mLum = relLum(
+      Math.round(red * m),
+      Math.round(green * m),
+      Math.round(blue * m),
+    );
+    if (mLum > 0.12) hi = m;
+    else lo = m;
+  }
+
+  const dr = Math.round(red * lo);
+  const dg = Math.round(green * lo);
+  const db = Math.round(blue * lo);
+  const bg = `#${dr.toString(16).padStart(2, '0')}${dg.toString(16).padStart(2, '0')}${db.toString(16).padStart(2, '0')}`;
+  return { bg, fg: '#ffffff' };
 }
 
 const theme = getThemedCardBg(PALETTE);
-
-export default async function decorate(block, bridge) {
-  let item;
-
-  if (bridge) {
-    bridge.applyHostStyles();
-    const isPreview = bridge.hostContext?.preview === true;
-    if (isPreview) {
-      item = SAMPLE_DATA;
-    } else {
-      // Detail concept - structuredContent IS the item (flat). Do NOT look for a wrapper key.
-      const _result = await bridge.toolResult;
-      item = (_result?.structuredContent || _result) || {};
-    }
-  } else {
-    item = SAMPLE_DATA;
-  }
-
-  block.textContent = '';
-  renderDetail(block, item, bridge);
-
-  if (bridge) {
-    bridge.reportSize(block.offsetWidth, block.offsetHeight);
-    let resizeTimer;
-    const ro = new ResizeObserver(() => {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(() => bridge.reportSize(block.offsetWidth, block.offsetHeight), 150);
-    });
-    ro.observe(block);
-  }
-}
 
 function renderDetail(block, item, bridge) {
   const card = document.createElement('div');
@@ -73,7 +66,16 @@ function renderDetail(block, item, bridge) {
   const imageSection = document.createElement('div');
   imageSection.className = 'image-section';
 
-  const CARD_COLORS = ['#378ef0','#9256d9','#0fb5ae','#e68619','#d83790','#2dca72','#4046ca','#72b340'];
+  const CARD_COLORS = [
+    '#378ef0',
+    '#9256d9',
+    '#0fb5ae',
+    '#e68619',
+    '#d83790',
+    '#2dca72',
+    '#4046ca',
+    '#72b340',
+  ];
   const fallbackColor = CARD_COLORS[0];
 
   const imageContainer = document.createElement('div');
@@ -148,4 +150,37 @@ function renderDetail(block, item, bridge) {
 
   card.appendChild(contentSection);
   block.appendChild(card);
+}
+
+export default async function decorate(block, bridge) {
+  let item;
+
+  if (bridge) {
+    bridge.applyHostStyles();
+    const isPreview = bridge.hostContext?.preview === true;
+    if (isPreview) {
+      item = SAMPLE_DATA;
+    } else {
+      const result = await bridge.toolResult;
+      item = (result?.structuredContent || result) || {};
+    }
+  } else {
+    item = SAMPLE_DATA;
+  }
+
+  block.textContent = '';
+  renderDetail(block, item, bridge);
+
+  if (bridge) {
+    bridge.reportSize(block.offsetWidth, block.offsetHeight);
+    let resizeTimer;
+    const ro = new ResizeObserver(() => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(
+        () => bridge.reportSize(block.offsetWidth, block.offsetHeight),
+        150,
+      );
+    });
+    ro.observe(block);
+  }
 }
